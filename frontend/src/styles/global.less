@@ -131,6 +131,34 @@ a {
   font-size: 0.94em;
 }
 
+.resume-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.resume-intro-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.resume-avatar-wrap {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid #d5dde3;
+}
+
+.resume-avatar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .visa-info {
   margin: 14px 0;
   background: #e8f4fd;
@@ -383,5 +411,13 @@ a {
 //   .comment-popover {
 //     width: calc(100vw - 40px);
 //     left: 20px !important;
+//   }
+// }
+
+// @media (max-width: 768px) {
+//   .resume-intro {
+//     flex-direction: column-reverse;
+//     align-items: center;
+//     text-align: center;
 //   }
 // }

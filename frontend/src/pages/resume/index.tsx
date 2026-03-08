@@ -275,8 +275,8 @@ export default function ResumePage() {
       </div>
 
       <section ref={resumePanelRef} className="resume-panel">
-        <section className="resume-block">
-          <div>
+        <section className="resume-block resume-intro">
+          <div className="resume-intro-main">
             <h1>
               Hayden Wu <span className="job-title">Senior Frontend Engineer</span>
             </h1>
@@ -286,6 +286,9 @@ export default function ResumePage() {
             <p className="contact-info">
               <a href={resumeData.contact.linkedinUrl} target="_blank" rel="noreferrer">{resumeData.contact.linkedinLabel}</a>
             </p>
+          </div>
+          <div className="resume-avatar-wrap" aria-hidden="true">
+            <img className="resume-avatar" src="/portrait.jpg" alt="Portrait" />
           </div>
         </section>
         <section className="visa-info">
