@@ -1,9 +1,12 @@
 const API_BASE = "";
 
 export async function fetchComments(page = "resume") {
-  const response = await fetch(`${API_BASE}/api/comments?page=${encodeURIComponent(page)}`, {
-    headers: { Accept: "application/json" },
-  });
+  const response = await fetch(
+    `${API_BASE}/api/comments?page=${encodeURIComponent(page)}`,
+    {
+      headers: { Accept: "application/json" },
+    }
+  );
   if (!response.ok) {
     throw new Error("failed_to_fetch_comments");
   }

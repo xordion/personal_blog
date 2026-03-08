@@ -5,13 +5,15 @@ const DEFAULT_HOME_DATA = {
   projects: [
     {
       title: "Contract Review Agent",
-      description: "Intelligent contract review platform with frontend architecture and performance optimization.",
+      description:
+        "Intelligent contract review platform with frontend architecture and performance optimization.",
       linkLabel: "View Source",
       link: "https://contract-agent.qfei.cn",
     },
     {
       title: "WPS SDK Wrapper",
-      description: "React-based SDK wrapper for WebOffice document workflows and integration consistency.",
+      description:
+        "React-based SDK wrapper for WebOffice document workflows and integration consistency.",
       linkLabel: "Live Demo",
       link: "https://github.com/xordion/wps-sdk-wrapper",
     },
@@ -22,19 +24,30 @@ const DEFAULT_HOME_DATA = {
 
 function loadHomeData() {
   try {
-    const privateContext = require.context("../private", false, /^\.\/resume\.private\.json$/);
+    const privateContext = require.context(
+      "../private",
+      false,
+      /^\.\/resume\.private\.json$/
+    );
     if (!privateContext.keys().includes("./resume.private.json")) {
       return DEFAULT_HOME_DATA;
     }
     const moduleData = privateContext("./resume.private.json");
-    const rawData = moduleData && typeof moduleData === "object" && "default" in moduleData ? moduleData.default : moduleData;
+    const rawData =
+      moduleData && typeof moduleData === "object" && "default" in moduleData
+        ? moduleData.default
+        : moduleData;
     const contact = rawData?.contact || {};
     return {
-      projects: Array.isArray(rawData?.homeProjects) && rawData.homeProjects.length > 0 ? rawData.homeProjects : DEFAULT_HOME_DATA.projects,
+      projects:
+        Array.isArray(rawData?.homeProjects) && rawData.homeProjects.length > 0
+          ? rawData.homeProjects
+          : DEFAULT_HOME_DATA.projects,
       linkedinUrl: contact.linkedinUrl || DEFAULT_HOME_DATA.linkedinUrl,
       email: contact.email || DEFAULT_HOME_DATA.email,
     };
   } catch (_error) {
+    console.error(_error);
     return DEFAULT_HOME_DATA;
   }
 }
@@ -45,7 +58,9 @@ export default function HomePage() {
   return (
     <section className="home-page">
       <h1>Hayden Wu</h1>
-      <p className="subtitle">Senior Frontend Engineer / Product Design Enthusiast</p>
+      <p className="subtitle">
+        Senior Frontend Engineer / Product Design Enthusiast
+      </p>
 
       <section className="project-grid">
         {homeData.projects.map((item) => (
@@ -60,11 +75,20 @@ export default function HomePage() {
       </section>
 
       <div className="home-actions">
-        <Link to="/resume" className="badge-link">View Resume</Link>
-        <a className="badge-link" href={homeData.linkedinUrl} target="_blank" rel="noreferrer">
+        <Link to="/resume" className="badge-link">
+          View Resume
+        </Link>
+        <a
+          className="badge-link"
+          href={homeData.linkedinUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
           LinkedIn
         </a>
-        <a className="badge-link" href={`mailto:${homeData.email}`}>Contact Me</a>
+        <a className="badge-link" href={`mailto:${homeData.email}`}>
+          Contact Me
+        </a>
       </div>
     </section>
   );

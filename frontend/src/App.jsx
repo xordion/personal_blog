@@ -7,8 +7,12 @@ export default function App() {
   return (
     <div className="app-shell">
       <header className="top-nav">
-        <Link to="/" className="nav-link">Home</Link>
-        <Link to="/resume" className="nav-link">Resume</Link>
+        <Link to="/" className="nav-link">
+          Home
+        </Link>
+        <Link to="/resume" className="nav-link">
+          Resume
+        </Link>
       </header>
       <main className="app-main">
         <Routes>

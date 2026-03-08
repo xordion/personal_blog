@@ -29,6 +29,15 @@ module.exports = {
   rules: {
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/no-explicit-any": "off",
+    "react/no-unescaped-entities": "off",
   },
+  overrides: [
+    {
+      files: ["webpack.config.js", "*.config.js", "*.config.cjs"],
+      rules: {
+        "@typescript-eslint/no-require-imports": "off",
+      },
+    },
+  ],
   ignorePatterns: ["dist/", "node_modules/"],
 };

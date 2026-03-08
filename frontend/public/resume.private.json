@@ -1,10 +1,7 @@
 {
   "summary": "11+ years of expert-level experience in frontend architecture and engineering excellence. I specialize in transforming fragmented development cycles into streamlined, automated pipelines. Beyond technical mastery, I excel in mentorship and technical governance, driving architectural decisions that minimize rollbacks and maximize scalability across mobile, web, and automotive platforms.",
   "skills": [
-    [
-      "Technical Stack",
-      "React, Vue 2/3, TypeScript, JavaScript"
-    ],
+    ["Technical Stack", "React, Vue 2/3, TypeScript, JavaScript"],
     [
       "Quality Assurance",
       "Jest (Unit Testing), Playwright (E2E), Performance Profiling"

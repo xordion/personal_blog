@@ -1,7 +1,8 @@
 import type { ResumeData } from "./types";
 
 export const DEFAULT_RESUME_DATA: ResumeData = {
-  summary: "Please create frontend/src/private/resume.private.json to provide your personal summary.",
+  summary:
+    "Please create frontend/src/private/resume.private.json to provide your personal summary.",
   contact: {
     email: "your.email@example.com",
     phone: "+00 000000000",

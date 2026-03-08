@@ -2,7 +2,12 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { createComment, fetchComments } from "../../api";
 import { DEFAULT_RESUME_DATA } from "./defaultResumeData";
-import type { CommentRow, FloatPos, PrivateResumeData, ResumeData } from "./types";
+import type {
+  CommentRow,
+  FloatPos,
+  PrivateResumeData,
+  ResumeData,
+} from "./types";
 
 declare const require: {
   context: (
@@ -33,22 +38,32 @@ function buildResumeData(data: PrivateResumeData = {}): ResumeData {
 
 function loadPrivateResumeData(): ResumeData {
   try {
-    const privateContext = require.context("../../private", false, /^\.\/resume\.private\.json$/);
+    const privateContext = require.context(
+      "../../private",
+      false,
+      /^\.\/resume\.private\.json$/
+    );
     if (!privateContext.keys().includes("./resume.private.json")) {
       return DEFAULT_RESUME_DATA;
     }
     const moduleData = privateContext("./resume.private.json") as {
       default?: PrivateResumeData;
     };
-    const rawData = moduleData && typeof moduleData === "object" && "default" in moduleData ? moduleData.default : moduleData;
+    const rawData =
+      moduleData && typeof moduleData === "object" && "default" in moduleData
+        ? moduleData.default
+        : moduleData;
     return buildResumeData((rawData || {}) as PrivateResumeData);
   } catch (_error) {
+    console.error(_error);
     return DEFAULT_RESUME_DATA;
   }
 }
 
 function normalize(text: unknown): string {
-  return String(text || "").replace(/\s+/g, " ").trim();
+  return String(text || "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function quoted(text: string): string {
@@ -62,8 +77,16 @@ export default function ResumePage() {
   const [status, setStatus] = useState("");
   const [statusError, setStatusError] = useState(false);
   const [selectionQuote, setSelectionQuote] = useState("");
-  const [triggerPos, setTriggerPos] = useState<FloatPos>({ left: 0, top: 0, visible: false });
-  const [popoverPos, setPopoverPos] = useState<FloatPos>({ left: 0, top: 0, visible: false });
+  const [triggerPos, setTriggerPos] = useState<FloatPos>({
+    left: 0,
+    top: 0,
+    visible: false,
+  });
+  const [popoverPos, setPopoverPos] = useState<FloatPos>({
+    left: 0,
+    top: 0,
+    visible: false,
+  });
   const [popoverInput, setPopoverInput] = useState("");
   const [bottomInput, setBottomInput] = useState("");
 
@@ -93,7 +116,11 @@ export default function ResumePage() {
       setComments(rows || []);
       showStatus("");
     } catch (_error) {
-      showStatus("Comment service is temporarily unavailable, please try again later.", true);
+      console.error(_error);
+      showStatus(
+        "Comment service is temporarily unavailable, please try again later.",
+        true
+      );
     }
   }, [showStatus]);
 
@@ -118,6 +145,7 @@ export default function ResumePage() {
         await loadComments();
         return true;
       } catch (_error) {
+        console.error(_error);
         showStatus("Submission failed, please try again later.", true);
         return false;
       }
@@ -128,7 +156,9 @@ export default function ResumePage() {
   useEffect(() => {
     function handleMouseUp(event: MouseEvent) {
       const target = event.target as Element | null;
-      const clickedOnTrigger = !!target?.closest?.(".selection-comment-trigger");
+      const clickedOnTrigger = !!target?.closest?.(
+        ".selection-comment-trigger"
+      );
       const clickedInsidePopover = !!target?.closest?.(".comment-popover");
       if (clickedOnTrigger || clickedInsidePopover) {
         return;
@@ -185,7 +215,10 @@ export default function ResumePage() {
   }, [popoverPos.visible]);
 
   const onPopoverSubmit = useCallback(async () => {
-    const ok = await submitComment({ content: popoverInput, quote: selectionQuote });
+    const ok = await submitComment({
+      content: popoverInput,
+      quote: selectionQuote,
+    });
     if (!ok) return;
     setPopoverInput("");
     setPopoverPos((prev) => ({ ...prev, visible: false }));
@@ -239,7 +272,9 @@ export default function ResumePage() {
       return;
     }
 
-    const styleNodes = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'));
+    const styleNodes = Array.from(
+      document.querySelectorAll('link[rel="stylesheet"], style')
+    );
     const styleMarkup = styleNodes.map((node) => node.outerHTML).join("\n");
 
     frameWindow.document.open();
@@ -283,7 +318,11 @@ export default function ResumePage() {
   return (
     <section ref={resumePageRef} className="resume-page">
       <div className="row-end resume-print-actions">
-        <button type="button" className="primary-btn resume-print-btn" onClick={onPrintResume}>
+        <button
+          type="button"
+          className="primary-btn resume-print-btn"
+          onClick={onPrintResume}
+        >
           Export PDF (Resume Only)
         </button>
       </div>
@@ -292,13 +331,33 @@ export default function ResumePage() {
         <section className="resume-block resume-intro">
           <div className="resume-intro-main">
             <h1>
-              Hayden Wu <span className="job-title">Senior Frontend Engineer</span>
+              Hayden Wu{" "}
+              <span className="job-title">Senior Frontend Engineer</span>
             </h1>
             <p className="contact-info">
-              Email: <a href={`mailto:${resumeData.contact.email}`}>{resumeData.contact.email}</a> | Phone: {resumeData.contact.phone} | Location: {resumeData.contact.location}
+              Email:{" "}
+              <a href={`mailto:${resumeData.contact.email}`}>
+                {resumeData.contact.email}
+              </a>{" "}
+              | Phone: {resumeData.contact.phone} | Location:{" "}
+              {resumeData.contact.location}
             </p>
             <p className="contact-info">
-              <a href={resumeData.contact.linkedinUrl} target="_blank" rel="noreferrer">{resumeData.contact.linkedinLabel}</a> | <a href={resumeData.contact.blogUrl} target="_blank" rel="noreferrer">{resumeData.contact.blogLabel}</a>
+              <a
+                href={resumeData.contact.linkedinUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {resumeData.contact.linkedinLabel}
+              </a>{" "}
+              |{" "}
+              <a
+                href={resumeData.contact.blogUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {resumeData.contact.blogLabel}
+              </a>
             </p>
           </div>
           <div className="resume-avatar-wrap" aria-hidden="true">
@@ -329,16 +388,29 @@ export default function ResumePage() {
         <section className="resume-block">
           <h2>Work Experience</h2>
           {resumeData.experience.map((item) => (
-            <div key={`${item.date}-${item.company}`} className="experience-item">
+            <div
+              key={`${item.date}-${item.company}`}
+              className="experience-item"
+            >
               <div className="exp-date">{item.date}</div>
               <div className="exp-content">
                 <div className="exp-header">{item.company}</div>
                 {item.role ? <div className="exp-sub">{item.role}</div> : null}
-                {item.projects ? <div className="exp-projects"><strong>Projects:</strong> {item.projects}</div> : null}
+                {item.projects ? (
+                  <div className="exp-projects">
+                    <strong>Projects:</strong> {item.projects}
+                  </div>
+                ) : null}
                 {item.bullets.length > 0 ? (
                   <ul className="exp-list">
                     {item.bullets.map((bullet, index) => (
-                      <li key={typeof bullet === "string" ? bullet : `${bullet.label}-${index}`}>
+                      <li
+                        key={
+                          typeof bullet === "string"
+                            ? bullet
+                            : `${bullet.label}-${index}`
+                        }
+                      >
                         {typeof bullet === "string" ? (
                           bullet
                         ) : (
@@ -359,18 +431,29 @@ export default function ResumePage() {
         <section className="resume-block">
           <h2>Education</h2>
           <div className="education-item">
-            <div className="exp-header">Changchun University of Science and Technology <span className="education-year">2010 – 2014</span></div>
+            <div className="exp-header">
+              Changchun University of Science and Technology
+              <span className="education-year">2010 – 2014</span>
+            </div>
             <div>Bachelor's Degree</div>
-            <div className="exp-sub">Note: Anabin H+ Recognized Institution</div>
+            <div className="exp-sub">
+              Note: Anabin H+ Recognized Institution
+            </div>
           </div>
         </section>
 
         <section className="resume-block">
           <h2>Languages</h2>
           <div className="lang-section">
-            <div><strong>Chinese / Shanghainese:</strong> Native</div>
-            <div><strong>English:</strong> C1</div>
-            <div><strong>German:</strong> A1</div>
+            <div>
+              <strong>Chinese / Shanghainese:</strong> Native
+            </div>
+            <div>
+              <strong>English:</strong> C1
+            </div>
+            <div>
+              <strong>German:</strong> A1
+            </div>
           </div>
         </section>
 
@@ -392,19 +475,29 @@ export default function ResumePage() {
             placeholder="Type your comment here"
           />
           <div className="row-end">
-            <button type="submit" className="primary-btn">Submit Comment</button>
+            <button type="submit" className="primary-btn">
+              Submit Comment
+            </button>
           </div>
         </form>
 
         <p className={`status ${statusError ? "error" : ""}`}>{status}</p>
 
         <div className="comment-list">
-          {comments.length === 0 ? <p className="comment-empty">No comments yet. Be the first to leave one.</p> : null}
+          {comments.length === 0 ? (
+            <p className="comment-empty">
+              No comments yet. Be the first to leave one.
+            </p>
+          ) : null}
           {comments.map((item) => (
             <article key={item.id} className="comment-card">
-              {item.quote ? <p className="quote">{quoted(item.quote)}</p> : null}
+              {item.quote ? (
+                <p className="quote">{quoted(item.quote)}</p>
+              ) : null}
               <p className="body">{item.content}</p>
-              <p className="meta">{item.author} · {new Date(item.createdAt).toLocaleString()}</p>
+              <p className="meta">
+                {item.author} · {new Date(item.createdAt).toLocaleString()}
+              </p>
             </article>
           ))}
         </div>
@@ -414,7 +507,11 @@ export default function ResumePage() {
         ref={triggerRef}
         type="button"
         className="selection-comment-trigger"
-        style={{ left: `${triggerPos.left}px`, top: `${triggerPos.top}px`, display: triggerPos.visible ? "inline-flex" : "none" }}
+        style={{
+          left: `${triggerPos.left}px`,
+          top: `${triggerPos.top}px`,
+          display: triggerPos.visible ? "inline-flex" : "none",
+        }}
         onClick={onOpenPopover}
       >
         Comment Selection
@@ -422,7 +519,11 @@ export default function ResumePage() {
 
       <div
         className="comment-popover"
-        style={{ left: `${popoverPos.left}px`, top: `${popoverPos.top}px`, display: popoverPos.visible ? "block" : "none" }}
+        style={{
+          left: `${popoverPos.left}px`,
+          top: `${popoverPos.top}px`,
+          display: popoverPos.visible ? "block" : "none",
+        }}
       >
         <h3>Comment Selection</h3>
         <p className="quote-preview">{quoted(selectionQuote)}</p>
@@ -433,8 +534,22 @@ export default function ResumePage() {
           placeholder="Enter your comment"
         />
         <div className="row-end with-gap">
-          <button type="button" className="ghost-btn" onClick={() => setPopoverPos((prev) => ({ ...prev, visible: false }))}>Cancel</button>
-          <button type="button" className="primary-btn" onClick={onPopoverSubmit}>Submit</button>
+          <button
+            type="button"
+            className="ghost-btn"
+            onClick={() =>
+              setPopoverPos((prev) => ({ ...prev, visible: false }))
+            }
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="primary-btn"
+            onClick={onPopoverSubmit}
+          >
+            Submit
+          </button>
         </div>
       </div>
     </section>
