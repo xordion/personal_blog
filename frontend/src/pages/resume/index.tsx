@@ -69,10 +69,22 @@ export default function ResumePage() {
 
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const resumePanelRef = useRef<HTMLElement | null>(null);
+  const resumePageRef = useRef<HTMLElement | null>(null);
 
   const showStatus = useCallback((message: string, isError = false) => {
     setStatus(message);
     setStatusError(isError);
+  }, []);
+
+  const toPageRelativePos = useCallback((left: number, top: number) => {
+    const pageRect = resumePageRef.current?.getBoundingClientRect();
+    if (!pageRect) {
+      return { left, top };
+    }
+    return {
+      left: left - pageRect.left,
+      top: top - pageRect.top,
+    };
   }, []);
 
   const loadComments = useCallback(async () => {
@@ -81,7 +93,7 @@ export default function ResumePage() {
       setComments(rows || []);
       showStatus("");
     } catch (_error) {
-      showStatus("评论服务暂不可用，请稍后重试。", true);
+      showStatus("Comment service is temporarily unavailable, please try again later.", true);
     }
   }, [showStatus]);
 
@@ -93,7 +105,7 @@ export default function ResumePage() {
     async ({ content, quote }: { content: string; quote: string }) => {
       const normalizedContent = normalize(content);
       if (!normalizedContent) {
-        showStatus("评论内容不能为空。", true);
+        showStatus("Comment content cannot be empty.", true);
         return false;
       }
       try {
@@ -102,11 +114,11 @@ export default function ResumePage() {
           content: normalizedContent,
           quote: normalize(quote || ""),
         });
-        showStatus("评论已提交。", false);
+        showStatus("Comment submitted.", false);
         await loadComments();
         return true;
       } catch (_error) {
-        showStatus("提交失败，请稍后重试。", true);
+        showStatus("Submission failed, please try again later.", true);
         return false;
       }
     },
@@ -145,9 +157,10 @@ export default function ResumePage() {
         }
 
         setSelectionQuote(text);
+        const nextPos = toPageRelativePos(rect.left, rect.bottom + 8);
         setTriggerPos({
-          left: window.scrollX + rect.left,
-          top: window.scrollY + rect.bottom + 8,
+          left: nextPos.left,
+          top: nextPos.top,
           visible: true,
         });
       }, 0);
@@ -196,13 +209,14 @@ export default function ResumePage() {
     const triggerEl = triggerRef.current;
     if (!triggerEl || !selectionQuote) return;
     const rect = triggerEl.getBoundingClientRect();
+    const nextPos = toPageRelativePos(rect.left, rect.bottom + 6);
     setPopoverPos({
-      left: window.scrollX + rect.left,
-      top: window.scrollY + rect.bottom + 6,
+      left: nextPos.left,
+      top: nextPos.top,
       visible: true,
     });
     setPopoverInput("");
-  }, [selectionQuote]);
+  }, [selectionQuote, toPageRelativePos]);
 
   const onPrintResume = useCallback(() => {
     const panel = resumePanelRef.current;
@@ -221,7 +235,7 @@ export default function ResumePage() {
     const frameWindow = iframe.contentWindow;
     if (!frameWindow) {
       document.body.removeChild(iframe);
-      showStatus("导出失败，请稍后重试。", true);
+      showStatus("Export failed, please try again later.", true);
       return;
     }
 
@@ -267,7 +281,7 @@ export default function ResumePage() {
   }, [showStatus]);
 
   return (
-    <section className="resume-page">
+    <section ref={resumePageRef} className="resume-page">
       <div className="row-end resume-print-actions">
         <button type="button" className="primary-btn resume-print-btn" onClick={onPrintResume}>
           Export PDF (Resume Only)
@@ -284,7 +298,7 @@ export default function ResumePage() {
               Email: <a href={`mailto:${resumeData.contact.email}`}>{resumeData.contact.email}</a> | Phone: {resumeData.contact.phone} | Location: {resumeData.contact.location}
             </p>
             <p className="contact-info">
-              <a href={resumeData.contact.linkedinUrl} target="_blank" rel="noreferrer">{resumeData.contact.linkedinLabel}</a>
+              <a href={resumeData.contact.linkedinUrl} target="_blank" rel="noreferrer">{resumeData.contact.linkedinLabel}</a> | <a href={resumeData.contact.blogUrl} target="_blank" rel="noreferrer">{resumeData.contact.blogLabel}</a>
             </p>
           </div>
           <div className="resume-avatar-wrap" aria-hidden="true">
@@ -320,10 +334,19 @@ export default function ResumePage() {
               <div className="exp-content">
                 <div className="exp-header">{item.company}</div>
                 {item.role ? <div className="exp-sub">{item.role}</div> : null}
+                {item.projects ? <div className="exp-projects"><strong>Projects:</strong> {item.projects}</div> : null}
                 {item.bullets.length > 0 ? (
                   <ul className="exp-list">
-                    {item.bullets.map((bullet) => (
-                      <li key={bullet}>{bullet}</li>
+                    {item.bullets.map((bullet, index) => (
+                      <li key={typeof bullet === "string" ? bullet : `${bullet.label}-${index}`}>
+                        {typeof bullet === "string" ? (
+                          bullet
+                        ) : (
+                          <>
+                            <strong>{bullet.label}:</strong> {bullet.text}
+                          </>
+                        )}
+                      </li>
                     ))}
                   </ul>
                 ) : null}
@@ -366,17 +389,17 @@ export default function ResumePage() {
             value={bottomInput}
             onChange={(event) => setBottomInput(event.target.value)}
             maxLength={500}
-            placeholder="在这里直接输入评论"
+            placeholder="Type your comment here"
           />
           <div className="row-end">
-            <button type="submit" className="primary-btn">提交评论</button>
+            <button type="submit" className="primary-btn">Submit Comment</button>
           </div>
         </form>
 
         <p className={`status ${statusError ? "error" : ""}`}>{status}</p>
 
         <div className="comment-list">
-          {comments.length === 0 ? <p className="comment-empty">还没有评论，欢迎留下第一条。</p> : null}
+          {comments.length === 0 ? <p className="comment-empty">No comments yet. Be the first to leave one.</p> : null}
           {comments.map((item) => (
             <article key={item.id} className="comment-card">
               {item.quote ? <p className="quote">{quoted(item.quote)}</p> : null}
@@ -394,24 +417,24 @@ export default function ResumePage() {
         style={{ left: `${triggerPos.left}px`, top: `${triggerPos.top}px`, display: triggerPos.visible ? "inline-flex" : "none" }}
         onClick={onOpenPopover}
       >
-        评论选中内容
+        Comment Selection
       </button>
 
       <div
         className="comment-popover"
         style={{ left: `${popoverPos.left}px`, top: `${popoverPos.top}px`, display: popoverPos.visible ? "block" : "none" }}
       >
-        <h3>评论选中内容</h3>
+        <h3>Comment Selection</h3>
         <p className="quote-preview">{quoted(selectionQuote)}</p>
         <textarea
           value={popoverInput}
           onChange={(event) => setPopoverInput(event.target.value)}
           maxLength={500}
-          placeholder="输入你的评论"
+          placeholder="Enter your comment"
         />
         <div className="row-end with-gap">
-          <button type="button" className="ghost-btn" onClick={() => setPopoverPos((prev) => ({ ...prev, visible: false }))}>取消</button>
-          <button type="button" className="primary-btn" onClick={onPopoverSubmit}>提交</button>
+          <button type="button" className="ghost-btn" onClick={() => setPopoverPos((prev) => ({ ...prev, visible: false }))}>Cancel</button>
+          <button type="button" className="primary-btn" onClick={onPopoverSubmit}>Submit</button>
         </div>
       </div>
     </section>

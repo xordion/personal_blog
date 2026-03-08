@@ -1,10 +1,18 @@
 export type SkillItem = [string, string];
 
+export type ExperienceBullet =
+  | string
+  | {
+      label: string;
+      text: string;
+    };
+
 export type ExperienceItem = {
   date: string;
   company: string;
   role: string;
-  bullets: string[];
+  projects?: string;
+  bullets: ExperienceBullet[];
   tags: string;
 };
 
@@ -16,6 +24,8 @@ export type ResumeData = {
     location: string;
     linkedinUrl: string;
     linkedinLabel: string;
+    blogUrl: string;
+    blogLabel: string;
   };
   visaStatus: string;
   skills: SkillItem[];

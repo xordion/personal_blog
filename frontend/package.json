@@ -4,7 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "webpack serve --config webpack.config.js --mode development",
-    "build": "webpack --config webpack.config.js --mode production"
+    "build": "webpack --config webpack.config.js --mode production",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -18,11 +22,18 @@
     "@babel/preset-typescript": "^7.26.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "@typescript-eslint/eslint-plugin": "^8.12.2",
+    "@typescript-eslint/parser": "^8.12.2",
     "babel-loader": "^9.2.1",
     "css-loader": "^7.1.2",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.1.0",
     "html-webpack-plugin": "^5.6.3",
     "less": "^4.2.0",
     "less-loader": "^12.2.0",
+    "prettier": "^3.3.3",
     "style-loader": "^4.0.0",
     "typescript": "^5.7.2",
     "webpack": "^5.96.1",
