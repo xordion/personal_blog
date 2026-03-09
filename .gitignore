@@ -20,7 +20,7 @@ backend/node_modules/
 
 # Build outputs
 frontend/dist/
-frontend/src/private/resume.private.json
+frontend/public/private/*
 dist/
 build/
 coverage/

@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
+const PRIVATE_RESUME_URL = "/private/resume.private.json";
 
 const DEFAULT_HOME_DATA = {
   projects: [
@@ -22,21 +24,11 @@ const DEFAULT_HOME_DATA = {
   email: "your.email@example.com",
 };
 
-function loadHomeData() {
+async function loadHomeData() {
   try {
-    const privateContext = require.context(
-      "../private",
-      false,
-      /^\.\/resume\.private\.json$/
-    );
-    if (!privateContext.keys().includes("./resume.private.json")) {
-      return DEFAULT_HOME_DATA;
-    }
-    const moduleData = privateContext("./resume.private.json");
-    const rawData =
-      moduleData && typeof moduleData === "object" && "default" in moduleData
-        ? moduleData.default
-        : moduleData;
+    const response = await fetch(PRIVATE_RESUME_URL, { cache: "no-store" });
+    if (!response.ok) return DEFAULT_HOME_DATA;
+    const rawData = await response.json();
     const contact = rawData?.contact || {};
     return {
       projects:
@@ -53,7 +45,17 @@ function loadHomeData() {
 }
 
 export default function HomePage() {
-  const homeData = React.useMemo(() => loadHomeData(), []);
+  const [homeData, setHomeData] = useState(DEFAULT_HOME_DATA);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadHomeData().then((data) => {
+      if (!cancelled) setHomeData(data);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <section className="home-page">

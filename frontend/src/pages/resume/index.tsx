@@ -9,19 +9,9 @@ import type {
   ResumeData,
 } from "./types";
 
-declare const require: {
-  context: (
-    path: string,
-    recursive?: boolean,
-    filter?: RegExp
-  ) => {
-    keys: () => string[];
-    (id: string): unknown;
-  };
-};
-
 const PAGE_KEY = "resume";
 const MAX_QUOTE_LENGTH = 260;
+const PRIVATE_RESUME_URL = "/private/resume.private.json";
 
 function buildResumeData(data: PrivateResumeData = {}): ResumeData {
   return {
@@ -36,24 +26,14 @@ function buildResumeData(data: PrivateResumeData = {}): ResumeData {
   };
 }
 
-function loadPrivateResumeData(): ResumeData {
+async function loadPrivateResumeDataFromPublic(): Promise<ResumeData> {
   try {
-    const privateContext = require.context(
-      "../../private",
-      false,
-      /^\.\/resume\.private\.json$/
-    );
-    if (!privateContext.keys().includes("./resume.private.json")) {
+    const response = await fetch(PRIVATE_RESUME_URL, { cache: "no-store" });
+    if (!response.ok) {
       return DEFAULT_RESUME_DATA;
     }
-    const moduleData = privateContext("./resume.private.json") as {
-      default?: PrivateResumeData;
-    };
-    const rawData =
-      moduleData && typeof moduleData === "object" && "default" in moduleData
-        ? moduleData.default
-        : moduleData;
-    return buildResumeData((rawData || {}) as PrivateResumeData);
+    const json = (await response.json()) as PrivateResumeData;
+    return buildResumeData(json || {});
   } catch (_error) {
     console.error(_error);
     return DEFAULT_RESUME_DATA;
@@ -72,7 +52,9 @@ function quoted(text: string): string {
 }
 
 export default function ResumePage() {
-  const [resumeData] = useState<ResumeData>(() => loadPrivateResumeData());
+  const [resumeData, setResumeData] = useState<ResumeData>(() =>
+    buildResumeData({})
+  );
   const [comments, setComments] = useState<CommentRow[]>([]);
   const [status, setStatus] = useState("");
   const [statusError, setStatusError] = useState(false);
@@ -127,6 +109,22 @@ export default function ResumePage() {
   useEffect(() => {
     loadComments();
   }, [loadComments]);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadPrivateResumeDataFromPublic()
+      .then((data) => {
+        if (!cancelled) {
+          setResumeData(data);
+        }
+      })
+      .catch((_error) => {
+        console.error(_error);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const submitComment = useCallback(
     async ({ content, quote }: { content: string; quote: string }) => {
@@ -361,7 +359,7 @@ export default function ResumePage() {
             </p>
           </div>
           <div className="resume-avatar-wrap" aria-hidden="true">
-            <img className="resume-avatar" src="/portrait.jpg" alt="Portrait" />
+            <img className="resume-avatar" src="/private/portrait.jpg" alt="Portrait" />
           </div>
         </section>
         <section className="visa-info">
