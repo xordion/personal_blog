@@ -326,12 +326,17 @@ export default function ResumePage() {
       </div>
 
       <section ref={resumePanelRef} className="resume-panel">
-        <section className="resume-block resume-intro">
+        <section className="resume-block">
           <div className="resume-intro-main">
             <h1>
               Hayden Wu{" "}
               <span className="job-title">Senior Frontend Engineer</span>
             </h1>
+            <p>{resumeData.summary}</p>
+          </div>
+        </section>
+        <section className="resume-block resume-intro">
+          <div className="resume-intro-main">
             <p className="contact-info">
               Email:{" "}
               <a href={`mailto:${resumeData.contact.email}`}>
@@ -357,19 +362,20 @@ export default function ResumePage() {
                 {resumeData.contact.blogLabel}
               </a>
             </p>
+            <section className="visa-info">
+              <strong>Visa Status:</strong> {resumeData.visaStatus}
+            </section>
           </div>
           <div className="resume-avatar-wrap" aria-hidden="true">
             <img className="resume-avatar" src="/private/portrait.jpg" alt="Portrait" />
           </div>
         </section>
-        <section className="visa-info">
-          <strong>Visa Status:</strong> {resumeData.visaStatus}
-        </section>
 
-        <section className="resume-block">
+
+        {/* <section className="resume-block">
           <h2>Professional Summary</h2>
           <p>{resumeData.summary}</p>
-        </section>
+        </section> */}
 
         <section className="resume-block">
           <h2>Core Skills</h2>
@@ -444,13 +450,13 @@ export default function ResumePage() {
           <h2>Languages</h2>
           <div className="lang-section">
             <div>
-              <strong>Chinese / Shanghainese:</strong> Native
+              <strong>Chinese / Shanghainese:</strong> C2, Mother tongue
             </div>
             <div>
-              <strong>English:</strong> C1
+              <strong>English:</strong> C1, working proficiency
             </div>
             <div>
-              <strong>German:</strong> A1
+              <strong>German:</strong> A1, currently learning
             </div>
           </div>
         </section>
