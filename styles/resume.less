@@ -1,0 +1,312 @@
+﻿.resume-page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 36px 20px 80px;
+  color: #333;
+  position: relative;
+}
+
+.resume-panel {
+  background: #ffffff;
+  padding: 24px 28px 32px;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(30, 41, 59, 0.08);
+}
+
+.resume-block {
+  margin-top: 24px;
+}
+
+.resume-block:first-child {
+  margin-top: 0;
+}
+
+.resume-panel h1 {
+  margin: 0;
+  color: #1d85a4;
+  font-weight: 600;
+}
+
+.resume-panel h2 {
+  border-bottom: 2px solid #1d85a4;
+  color: #1d85a4;
+  text-transform: uppercase;
+  font-size: 1.1em;
+  font-weight: 600;
+  margin: 24px 0 12px;
+}
+
+.resume-panel p {
+  margin: 0 0 8px;
+}
+
+.resume-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.resume-intro-main {
+  flex: 1;
+  min-width: 240px;
+}
+
+.job-title {
+  padding-left: 0.5em;
+  display: inline-block;
+  color: inherit;
+  font-size: 0.6em;
+  font-weight: 500;
+}
+
+.contact-info {
+  margin-top: 8px;
+  font-size: 0.92em;
+}
+
+.resume-avatar-wrap {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid #1d85a4;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.resume-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.visa-info {
+  background: #e8f4fd;
+  border-left: 4px solid #3498db;
+  padding: 10px 12px;
+  margin: 12px 0 0;
+  font-size: 0.9em;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: none;
+  gap: 12px;
+}
+
+.skill-item {
+  display: flex;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.skill-item strong {
+  min-width: 140px;
+  flex-shrink: 0;
+}
+
+.experience-item {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+.exp-date {
+  min-width: 120px;
+  color: #555;
+  font-size: 0.9em;
+  flex-shrink: 0;
+}
+
+.exp-content {
+  flex: 1;
+}
+
+.exp-header {
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.exp-sub {
+  font-style: italic;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.exp-projects {
+  margin: 6px 0 8px;
+  color: #4b5563;
+}
+
+.exp-list {
+  padding-left: 18px;
+  margin: 0;
+}
+
+.exp-tags {
+  margin-top: 8px;
+  font-size: 0.85em;
+  color: #64748b;
+}
+
+.education-item {
+  margin-bottom: 10px;
+}
+
+.education-year {
+  margin-left: 8px;
+  font-weight: 400;
+  color: #64748b;
+}
+
+.lang-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.resume-print-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.row-end {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.with-gap {
+  gap: 10px;
+}
+
+.primary-btn,
+.ghost-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 0.95em;
+  cursor: pointer;
+}
+
+.primary-btn {
+  background: #1d85a4;
+  color: #fff;
+}
+
+.ghost-btn {
+  background: #eef2f7;
+  color: #1f2937;
+}
+
+.comments-section {
+  margin-top: 30px;
+}
+
+.bottom-comment-form textarea,
+.comment-popover textarea {
+  width: 100%;
+  min-height: 90px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  padding: 10px 12px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.comment-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.comment-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(17, 24, 39, 0.08);
+}
+
+.comment-card .quote {
+  font-style: italic;
+  color: #64748b;
+  margin: 0 0 8px;
+}
+
+.comment-card .body {
+  margin: 0 0 6px;
+}
+
+.comment-card .meta {
+  margin: 0;
+  font-size: 0.85em;
+  color: #94a3b8;
+}
+
+.comment-empty {
+  color: #64748b;
+}
+
+.status {
+  margin-top: 10px;
+  color: #1f2937;
+}
+
+.status.error {
+  color: #b91c1c;
+}
+
+.selection-comment-trigger {
+  position: absolute;
+  z-index: 30;
+  border: none;
+  border-radius: 999px;
+  background: #1d85a4;
+  color: #fff;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+
+.comment-popover {
+  position: absolute;
+  z-index: 40;
+  width: min(320px, 80vw);
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);
+}
+
+.comment-popover h3 {
+  margin: 0 0 8px;
+  font-size: 1em;
+}
+
+.quote-preview {
+  margin: 0 0 10px;
+  font-size: 0.85em;
+  color: #64748b;
+}
+
+@media (max-width: 720px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .experience-item {
+    flex-direction: column;
+  }
+
+  .lang-section {
+    grid-template-columns: 1fr;
+  }
+
+  .resume-intro {
+    flex-direction: column;
+  }
+}
