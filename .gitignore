@@ -1,0 +1,19 @@
+﻿# local env
+.env.local
+
+# local data
+/data/comments.json
+
+# private/sensitive information
+/public/private/
+
+# dependencies
+node_modules/
+
+# build outputs
+.next/
+out/
+
+# system
+.DS_Store
+Thumbs.db
