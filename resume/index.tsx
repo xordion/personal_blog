@@ -1,51 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+﻿import React, { useCallback, useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { createComment, fetchComments } from "../api";
-import { DEFAULT_RESUME_DATA } from "./defaultResumeData";
 import type {
   CommentRow,
   FloatPos,
-  PrivateResumeData,
   ResumeData,
 } from "./types";
 
 const PAGE_KEY = "resume";
 const MAX_QUOTE_LENGTH = 260;
-const PRIVATE_RESUME_URL = "/private/resume.private.json";
-
-function buildResumeData(data: PrivateResumeData = {}): ResumeData {
-  return {
-    ...DEFAULT_RESUME_DATA,
-    ...data,
-    contact: {
-      ...DEFAULT_RESUME_DATA.contact,
-      ...(data.contact || {}),
-    },
-    skills: data.skills || DEFAULT_RESUME_DATA.skills,
-    experience: data.experience || DEFAULT_RESUME_DATA.experience,
-    languages: data.languages || DEFAULT_RESUME_DATA.languages,
-    hobbies: data.hobbies || DEFAULT_RESUME_DATA.hobbies,
-  };
-}
-
-async function loadPrivateResumeDataFromPublic(): Promise<ResumeData> {
-  try {
-    // Add timestamp in development to bust cache for hot reload
-    const url = process.env.NODE_ENV === "development"
-      ? `${PRIVATE_RESUME_URL}?t=${Date.now()}`
-      : PRIVATE_RESUME_URL;
-    
-    const response = await fetch(url, { cache: "no-store" });
-    if (!response.ok) {
-      return DEFAULT_RESUME_DATA;
-    }
-    const json = (await response.json()) as PrivateResumeData;
-    return buildResumeData(json || {});
-  } catch (_error) {
-    console.error(_error);
-    return DEFAULT_RESUME_DATA;
-  }
-}
 
 function normalize(text: unknown): string {
   return String(text || "")
@@ -58,10 +21,12 @@ function quoted(text: string): string {
   return `"${normalize(text).slice(0, MAX_QUOTE_LENGTH)}"`;
 }
 
-export default function ResumePage() {
-  const [resumeData, setResumeData] = useState<ResumeData>(() =>
-    buildResumeData({})
-  );
+interface ResumePageProps {
+  initialResumeData: ResumeData;
+}
+
+export default function ResumePage({ initialResumeData }: ResumePageProps) {
+  const [resumeData] = useState<ResumeData>(initialResumeData);
   const [comments, setComments] = useState<CommentRow[]>([]);
   const [status, setStatus] = useState("");
   const [statusError, setStatusError] = useState(false);
@@ -117,35 +82,7 @@ export default function ResumePage() {
     loadComments();
   }, [loadComments]);
 
-  useEffect(() => {
-    let cancelled = false;
-    const loadData = () => {
-      loadPrivateResumeDataFromPublic()
-        .then((data) => {
-          if (!cancelled) {
-            setResumeData(data);
-          }
-        })
-        .catch((_error) => {
-          console.error(_error);
-        });
-    };
 
-    loadData();
-
-    // Hot reload: poll for changes every 2 seconds in development
-    // let intervalId: NodeJS.Timeout | null = null;
-    // if (process.env.NODE_ENV === "development") {
-    //   intervalId = setInterval(loadData, 2000);
-    // }
-
-    // return () => {
-    //   cancelled = true;
-    //   if (intervalId) {
-    //     clearInterval(intervalId);
-    //   }
-    // };
-  }, []);
 
   const submitComment = useCallback(
     async ({ content, quote }: { content: string; quote: string }) => {
@@ -336,6 +273,11 @@ export default function ResumePage() {
 
   return (
     <section ref={resumePageRef} className="resume-page">
+      <div className="resume-top-actions">
+        <a className="back-link" href="/">
+          Back to Home
+        </a>
+      </div>
       <div className="row-end resume-print-actions">
         <button
           type="button"
