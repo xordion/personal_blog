@@ -31,6 +31,7 @@ async function loadHomeData() {
     const rawData = await response.json();
     const contact = rawData?.contact || {};
     return {
+      name: rawData?.name || "[Your Name]",
       projects:
         Array.isArray(rawData?.homeProjects) && rawData.homeProjects.length > 0
           ? rawData.homeProjects
@@ -60,7 +61,7 @@ export default function HomePage() {
   return (
     <section className="home-page">
       <div className="container">
-        <h1>Hayden Wu</h1>
+        <h1>{homeData.name}</h1>
         <p className="subtitle">
           Senior Frontend Engineer / Product Design Enthusiast
         </p>
